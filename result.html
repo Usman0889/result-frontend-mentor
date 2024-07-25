@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  <link rel="stylesheet" href="./result.css">
+  <title>Results summary component</title>
+</head>
+<body>
+  <main>
+    <section class="result">
+      <h1 class="result__heading">Your Result</h1>
+      <div class="result__score">
+        <span class="result__score-point">76</span>
+        <span class="result__score-of">of 100</span>
+      </div>
+      <h2 class="result__subheading">Great</h2>
+      <p class="result__text">You scored higher than <span class="result__text-higher">65</span>% of the people who have taken these tests.</span>
+    </section>
+    <section class="summary">
+      <h2 class="summary__heading">Summary</h2>
+      <ul class="summary__list"></ul>
+      <button type="button" onclick="location.reload()">Continue</button>
+    </section>
+  </main>
+  <footer>
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank" rel="noopener">Frontend Mentor</a>. 
+    Coded by <a href="https://rockybarua.netlify.app" target="_blank" rel="noopener">Rocky</a>.
+  </footer>
+
+  <script>
+    let scorePoint = 0;
+let sum = 0;
+
+
+fetch('./data.json')
+    .then(res => res.json())
+    .then(data => {
+        const summaryList = document.querySelector('.summary__list');
+        summaryList.innerHTML = '';
+
+        for(let i=0; i<data.length; i++){
+            summaryList.innerHTML += `
+                <li class="summary__item">
+                    <div class="summary__icon-container">
+                        <img src="${data[i].icon}" alt="" class="summary__icon">
+                        <p class="summary__text">${data[i].category}</p>
+                    </div>
+                    <span class="summary__score"><span class="summary__score-point">${data[i].score}</span> / 100</span>
+                </li>`
+            sum += data[i].score;
+        }
+        scorePoint = Math.round(sum / data.length);
+        let scorePointText = document.querySelector('.result__score-point');
+        var count = 0;
+        var interval = setInterval(function() {
+            count++;
+            scorePointText.innerText = count;
+            if (count >= scorePoint) {
+                clearInterval(interval);
+            }
+        }, 10);
+    });
+  </script>
+</body>
+</html>
